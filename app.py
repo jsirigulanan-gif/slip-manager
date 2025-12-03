@@ -23,12 +23,11 @@ st.markdown("""
 with st.sidebar:
     st.header("⚙️ ตั้งค่าระบบ")
     
-    # เช็คว่ามี Key ใน Secrets หรือยัง
+    # Check for secrets
     if "GEMINI_API_KEY" in st.secrets:
         api_key = st.secrets["GEMINI_API_KEY"]
         st.success("✅ ระบบพร้อมใช้งาน (API Key เชื่อมต่อแล้ว)")
     else:
-        # ถ้าไม่มีใน Secrets ค่อยให้กรอกเอง (เผื่อเอาไว้เทสต์)
         api_key = st.text_input("ใส่ Gemini API Key ของคุณ", type="password")
         st.warning("⚠️ ยังไม่ได้ฝัง API Key ใน Secrets")
     
@@ -54,7 +53,8 @@ if uploaded_files and api_key:
         results = []
         
         # --- 4. AI PROCESSING LOGIC ---
-      model = genai.GenerativeModel('gemini-1.5-flash')
+        # ใช้รุ่น Flash 1.5 ที่ไวและฟรี (จัดย่อหน้าให้ตรงแล้ว)
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         for i, uploaded_file in enumerate(uploaded_files):
             try:
@@ -62,7 +62,7 @@ if uploaded_files and api_key:
                 image = Image.open(uploaded_file)
                 status_text.text(f"กำลังอ่านใบที่ {i+1}/{len(uploaded_files)}: {uploaded_file.name}...")
                 
-                # Prompt Engineering (หัวใจสำคัญ)
+                # Prompt Engineering
                 prompt = """
                 Analyze this Thai Bank Slip image. Extract data into JSON format with these keys:
                 - date: DD/MM/YYYY
@@ -77,7 +77,7 @@ if uploaded_files and api_key:
                 
                 response = model.generate_content([prompt, image])
                 
-                # Cleaning JSON string (AI บางทีชอบแถม markdown)
+                # Cleaning JSON string
                 json_str = response.text.replace('```json', '').replace('```', '').strip()
                 data = json.loads(json_str)
                 
@@ -99,7 +99,7 @@ if uploaded_files and api_key:
             
             # Reorder columns
             cols = ['date', 'time', 'category', 'receiver', 'amount', 'filename']
-            # Handle missing cols just in case
+            # Handle missing cols
             df = df.reindex(columns=cols) 
             
             # Show Metrics
@@ -115,7 +115,7 @@ if uploaded_files and api_key:
             st.subheader("📋 ตารางรายรับ-รายจ่าย")
             st.dataframe(df, use_container_width=True)
             
-            # --- 6. FEATURE: AI FINANCIAL ROAST (ปากแจ๋ว) ---
+            # --- 6. FEATURE: AI FINANCIAL ROAST ---
             st.subheader("🔥 AI ขอวิจารณ์การเงินคุณ (โหมดปากแจ๋ว)")
             with st.spinner("AI กำลังเรียบเรียงคำด่า..."):
                 roast_prompt = f"""
