@@ -22,8 +22,15 @@ st.markdown("""
 # --- 2. SIDEBAR & SETUP ---
 with st.sidebar:
     st.header("⚙️ ตั้งค่าระบบ")
-    api_key = st.text_input("ใส่ Gemini API Key ของคุณ", type="password")
-    st.info("💡 ไปขอ Key ฟรีได้ที่ aistudio.google.com")
+    
+    # เช็คว่ามี Key ใน Secrets หรือยัง
+    if "GEMINI_API_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_API_KEY"]
+        st.success("✅ ระบบพร้อมใช้งาน (API Key เชื่อมต่อแล้ว)")
+    else:
+        # ถ้าไม่มีใน Secrets ค่อยให้กรอกเอง (เผื่อเอาไว้เทสต์)
+        api_key = st.text_input("ใส่ Gemini API Key ของคุณ", type="password")
+        st.warning("⚠️ ยังไม่ได้ฝัง API Key ใน Secrets")
     
     st.markdown("---")
     st.write("### 🔒 Privacy Mode")
