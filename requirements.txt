@@ -1,5 +1,5 @@
 streamlit
-google-generativeai>=0.7.ๅ
+google-generativeai>=0.7.1
 pandas
 openpyxl
 Pillow
