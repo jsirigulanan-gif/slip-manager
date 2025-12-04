@@ -54,7 +54,7 @@ if uploaded_files and api_key:
         
         # --- 4. AI PROCESSING LOGIC ---
         # ใช้รุ่น Flash 1.5 ที่ไวและฟรี (จัดย่อหน้าให้ตรงแล้ว)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-001')
         
         for i, uploaded_file in enumerate(uploaded_files):
             try:
